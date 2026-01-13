@@ -1,30 +1,33 @@
-name: Telegram Direct Downloader
+name: Download and Save to Repo4
 on: [workflow_dispatch]
 
+permissions:
+  contents: write
+
 jobs:
-  download_file:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install yt-dlp
+      - name: Download File from Telegram
         run: |
-          sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
-          sudo chmod a+rx /usr/local/bin/yt-dlp
+          # دانلود فایل با استفاده از یوزر-اجنت مرورگر
+          curl -L "https://t.me/rahgozar94725_ip/324" \
+          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+          -o "rahgozar_config.ehi"
 
-      - name: Download .ehi File
+      - name: Check if file is valid
         run: |
-          # دانلود فایل از پست 324 کانال
-          yt-dlp --get-filename -o "my_config.ehi" "https://t.me/rahgozar94725_ip/324"
-          yt-dlp "https://t.me/rahgozar94725_ip/324" -o "my_config.ehi"
+          # اگر فایل دانلود شده خیلی کوچک باشد یعنی فقط صفحه HTML دانلود شده
+          FILE_SIZE=$(stat -c%s "rahgozar_config.ehi")
+          if [ $FILE_SIZE -lt 5000 ]; then
+            echo "Warning: File might be just an HTML page. Telegram blocked direct download."
+          fi
 
       - name: Commit and Push
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add my_config.ehi
-          git commit -m "Fetched real .ehi file" || echo "No changes"
-          git push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Add latest config file"
+          file_pattern: 'rahgozar_config.ehi'
