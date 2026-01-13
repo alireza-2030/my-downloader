@@ -1,5 +1,8 @@
-name: Save Config to Repo2
+name: Save Config to Repo3
 on: [workflow_dispatch]
+
+permissions:
+  contents: write
 
 jobs:
   download_and_commit:
@@ -10,8 +13,7 @@ jobs:
 
       - name: Download File from Telegram
         run: |
-          # دانلود فایل با استفاده از لینک مستقیم نسخه وب
-          # استفاده از کاربر مجازی برای جلوگیری از مسدود شدن
+          # دانلود فایل با استفاده از لینک مستقیم
           curl -L "https://t.me/rahgozar94725_ip/324" \
           -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" \
           -o "rahgozar_config.ehi"
