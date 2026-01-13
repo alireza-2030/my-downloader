@@ -1,0 +1,17 @@
+name: Telegram Downloader
+on: [workflow_dispatch]
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download File
+        run: |
+          # دانلود مستقیم فایل ehi شماره 324 (آخرین فایل کانال)
+          curl -L "https://t.me/rahgozar94725_ip/324?single" -o last_config.ehi
+      - name: Upload to Github
+        uses: actions/upload-artifact@v4
+        with:
+          name: injector-config
+          path: last_config.ehi
