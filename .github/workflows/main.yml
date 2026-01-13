@@ -1,17 +1,25 @@
-name: Telegram Downloader
+name: Save Config to Repo
 on: [workflow_dispatch]
 
 jobs:
-  download:
+  download_and_commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Download File
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download File from Telegram
         run: |
-          # دانلود مستقیم فایل ehi شماره 324 (آخرین فایل کانال)
-          curl -L "https://t.me/rahgozar94725_ip/324?single" -o last_config.ehi
-      - name: Upload to Github
-        uses: actions/upload-artifact@v4
-        with:
-          name: injector-config
-          path: last_config.ehi
+          # دانلود فایل با استفاده از لینک مستقیم نسخه وب
+          # استفاده از کاربر مجازی برای جلوگیری از مسدود شدن
+          curl -L "https://t.me/rahgozar94725_ip/324" \
+          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" \
+          -o "rahgozar_config.ehi"
+
+      - name: Commit and Push to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add rahgozar_config.ehi
+          git commit -m "Add latest DNSTT config from Telegram" || echo "No changes to commit"
+          git push
